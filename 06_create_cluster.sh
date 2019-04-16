@@ -11,7 +11,7 @@ if [ ! -d ocp ]; then
     mkdir -p ocp
 
     # Create a master_nodes.json file
-    jq '.nodes[0:3] | {nodes: .}' "${NODES_FILE}" | tee "${MASTER_NODES_FILE}"
+#    jq '.nodes[0:3] | {nodes: .}' "${NODES_FILE}" | tee "${MASTER_NODES_FILE}"
 
     # Create install config for openshift-installer
     generate_ocp_install_config ocp

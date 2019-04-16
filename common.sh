@@ -17,39 +17,34 @@ if [ -z "${CONFIG:-}" ]; then
 fi
 source $CONFIG
 
-# Set variables
 # Additional DNS
-ADDN_DNS=${ADDN_DNS:-}
+ADDN_DNS=${ADDN_DNS:-"10.1.32.3"}
 # External interface for routing traffic through the host
-EXT_IF=${EXT_IF:-}
+EXT_IF=${EXT_IF:-"eno1"}
 # Provisioning interface
-PRO_IF=${PRO_IF:-}
-# Does libvirt manage the baremetal bridge (including DNS and DHCP)
-MANAGE_BR_BRIDGE=${MANAGE_BR_BRIDGE:-y}
-# Only manage bridges if is set
-MANAGE_PRO_BRIDGE=${MANAGE_PRO_BRIDGE:-y}
-MANAGE_INT_BRIDGE=${MANAGE_INT_BRIDGE:-y}
+PRO_IF=${PRO_IF:-"enp175s0f0"}
 # Internal interface, to bridge virbr0
-INT_IF=${INT_IF:-}
+INT_IF=${INT_IF:-"enp175s0f1"}
 #Root disk to deploy coreOS - use /dev/sda on BM
-ROOT_DISK=${ROOT_DISK:="/dev/vda"}
-# Kafka Strimzi configs
-KAFKA_NAMESPACE=${KAFKA_NAMESPACE:-strimzi}
-KAFKA_CLUSTERNAME=${KAFKA_CLUSTERNAME:-strimzi}
-KAFKA_PVC_SIZE=${KAFKA_PVC_SIZE:-10}
-# Kafka producer will generate 10 msg/sec/pod with a value of 100 (by default)
-KAFKA_PRODUCER_TIMER=${KAFKA_PRODUCER_TIMER:-"100"}
-KAFKA_PRODUCER_TOPIC=${KAFKA_PRODUCER_TOPIC:-strimzi-topic}
+ROOT_DISK=${ROOT_DISK:="/dev/sda"}
+ROOT_DISK_NAME=${ROOT_DISK_NAME-"/dev/sda"}
 
 FILESYSTEM=${FILESYSTEM:="/"}
+# Does libvirt manage the baremetal bridge (including DNS and DHCP)
+MANAGE_INT_BRIDGE=y
+MANAGE_BR_BRIDGE=${MANAGE_BR_BRIDGE:-y}
+MANAGE_PRO_BRIDGE=${MANAGE_PRO_BRIDGE:-y}
 
 WORKING_DIR=${WORKING_DIR:-"/opt/dev-scripts"}
 NODES_FILE=${NODES_FILE:-"${WORKING_DIR}/ironic_nodes.json"}
-NODES_PLATFORM=${NODES_PLATFORM:-"libvirt"}
-MASTER_NODES_FILE=${MASTER_NODES_FILE:-"ocp/master_nodes.json"}
+NODES_PLATFORM=${NODES_PLATFORM:-"baremetal"}
+MASTER_NODES_FILE=${MASTER_NODES_FILE:-"/home/test/rook.json"}
+
+FILESYSTEM=${FILESYSTEM:="/"}
 
 export RHCOS_IMAGE_URL=${RHCOS_IMAGE_URL:-"https://releases-rhcos.svc.ci.openshift.org/storage/releases/ootpa/"}
-export RHCOS_LATEST="$(curl ${RHCOS_IMAGE_URL}/builds.json | jq -r ".builds[0]")"
+#export RHCOS_LATEST="$(curl ${RHCOS_IMAGE_URL}/builds.json | jq -r '.builds[] | select( . | contains(".0"))'|head -n1 )"
+export RHCOS_LATEST="410.8.20190412.0"
 export RHCOS_IMAGE_VERSION="${RHCOS_IMAGE_VERSION:-${RHCOS_LATEST}}"
 export RHCOS_IMAGE_FILENAME_OPENSTACK_GZ="$(curl ${RHCOS_IMAGE_URL}/${RHCOS_IMAGE_VERSION}/meta.json | jq -r '.images.openstack.path')"
 export RHCOS_IMAGE_NAME=$(echo $RHCOS_IMAGE_FILENAME_OPENSTACK_GZ | sed -e 's/-openstack.*//')

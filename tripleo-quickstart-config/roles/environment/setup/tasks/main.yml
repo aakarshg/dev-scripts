@@ -114,3 +114,11 @@
     path: "{{ working_dir }}"
     state: directory
   become: true
+
+- name: replace BM network
+  become: true
+  shell: |
+     virsh net-destroy baremetal
+     virsh net-undefine baremetal
+     virsh net-define /home/test/baremetal.xml
+     virsh net-start baremetal

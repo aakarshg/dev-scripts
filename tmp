@@ -1,0 +1,2 @@
+#/bin/bash
+ansible-playbook -e non_root_user=test -e working_dir=/opt/dev-scripts -e roles_path=/home/test/dev-scripts/roles -e @tripleo-quickstart-config/metalkube-nodes.yml -e local_working_dir=/home/test/.quickstart -e virthost=f13-h02-000-1029u.rdu2.scalelab.redhat.com -e platform=baremetal -e @config/environments/dev_privileged_libvirt.yml -i tripleo-quickstart-config/metalkube-inventory.ini -b -vvv tripleo-quickstart-config/metalkube-setup-playbook.yml
